@@ -1,0 +1,39 @@
+plugins {
+    id 'java'
+}
+
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:6.0.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // Lombok runs at compile time only: it generates code, then isn't needed at runtime
+    compileOnly 'org.projectlombok:lombok:1.18.48'
+    annotationProcessor 'org.projectlombok:lombok:1.18.48'
+}
+
+test {
+    useJUnitPlatform()
+    // Forward harness settings, e.g. ./gradlew test -Dserver.port=8080
+    ['server.port', 'server.main'].each { key ->
+        if (System.getProperty(key) != null) systemProperty key, System.getProperty(key)
+    }
+    testLogging {
+        events 'passed', 'failed', 'skipped'
+        exceptionFormat 'full'
+        showStandardStreams = true
+    }
+}

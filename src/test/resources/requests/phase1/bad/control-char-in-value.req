@@ -1,0 +1,4 @@
+GET / HTTP/1.1\r\n
+Host: localhost\r\n
+X-Bad: a\x00b\r\n
+\r\n
